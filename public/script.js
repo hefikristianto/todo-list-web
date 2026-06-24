@@ -22,12 +22,29 @@ function renderTask(task) {
 
     let deadlineText = '-';
 
-if (task.due_date) {
-    deadlineText = new Date(task.due_date).toLocaleString('id-ID');
-}
+    if (task.due_date) {
+        deadlineText = task.due_date
+            .replace('T', ' ')
+            .substring(0, 16);
+    }
+
+    let completedInfo = '';
+
+    if (task.completed_at) {
+        const completedDate = new Date(task.completed_at);
+
+        const formatted =
+            completedDate.getFullYear() + '-' +
+            String(completedDate.getMonth() + 1).padStart(2, '0') + '-' +
+            String(completedDate.getDate()).padStart(2, '0') + ' ' +
+            String(completedDate.getHours()).padStart(2, '0') + ':' +
+            String(completedDate.getMinutes()).padStart(2, '0');
+
+        completedInfo = ` | Selesai: ${formatted}`;
+    }
 
 info.textContent =
-    ` | Category: ${task.category || '-'} | Priority: ${task.priority || 1} | Deadline: ${deadlineText}`;
+    ` | Category: ${task.category || '-'} | Priority: ${task.priority || 1} | Deadline: ${deadlineText}${completedInfo}`;
 
     button.addEventListener('click', function() {
         fetch(`/tasks/${task.id}`, {
