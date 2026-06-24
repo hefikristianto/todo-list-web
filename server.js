@@ -1,64 +1,95 @@
+require('dotenv').config();
+
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = 3000;
-const DATA_FILE = path.join(__dirname, 'data', 'tasks.json');
+
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY
+);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/tasks', function(req, res) {
-    const data = fs.readFileSync(DATA_FILE, 'utf-8');
-    res.json(JSON.parse(data));
-});
+app.get('/tasks', async function(req, res) {
+    const { data, error } = await supabase
+        .from('tasks')
+        .select('*')
+        .order('created_at', { ascending: true });
 
-app.post('/tasks', function(req, res) {
-    const tasks = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-
-    const newTask = {
-        id: Date.now(),
-        text: req.body.text,
-        completed: false
-    };
-
-    tasks.push(newTask);
-    fs.writeFileSync(DATA_FILE, JSON.stringify(tasks, null, 2));
-
-    res.json(newTask);
-});
-
-app.delete('/tasks/:id', function(req, res) {
-    const tasks = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    const id = Number(req.params.id);
-
-    const filteredTasks = tasks.filter(function(item) {
-        return item.id !== id;
-    });
-
-    fs.writeFileSync(DATA_FILE, JSON.stringify(filteredTasks, null, 2));
-
-    res.json({ message: 'Task deleted' });
-});
-
-app.patch('/tasks/:id', function(req, res) {
-    const tasks = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    const id = Number(req.params.id);
-
-    const task = tasks.find(function(item) {
-        return item.id === id;
-    });
-
-    if (!task) {
-        return res.status(404).json({ message: 'Task not found' });
+    if (error) {
+        return res.status(500).json({ message: error.message });
     }
 
-    task.completed = req.body.completed;
+    res.json(data);
+});
 
-    fs.writeFileSync(DATA_FILE, JSON.stringify(tasks, null, 2));
+app.post('/tasks', async function(req, res) {
+    const { text, due_date, category, priority } = req.body;
 
-    res.json(task);
+    const newTask = {
+        text: text,
+        completed: false,
+        due_date: due_date || null,
+        category: category || null,
+        priority: priority || 1
+    };
+
+    const { data, error } = await supabase
+        .from('tasks')
+        .insert([newTask])
+        .select()
+        .single();
+
+    if (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+    res.json(data);
+});
+
+app.patch('/tasks/:id', async function(req, res) {
+    const id = Number(req.params.id);
+
+    const updateData = {
+        completed: req.body.completed
+    };
+
+    if (req.body.completed === true) {
+        updateData.completed_at = new Date().toISOString();
+    }
+
+    const { data, error } = await supabase
+        .from('tasks')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+    res.json(data);
+});
+
+app.delete('/tasks/:id', async function(req, res) {
+    const id = Number(req.params.id);
+
+    const { error } = await supabase
+        .from('tasks')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+    res.json({ message: 'Task deleted' });
 });
 
 app.listen(PORT, function() {

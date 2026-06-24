@@ -3,10 +3,15 @@ const input = document.getElementById('todo-input');
 const todoList = document.getElementById('todo-list');
 const completedList = document.getElementById('completed-list');
 
+const dueDateInput = document.getElementById('due-date');
+const categoryInput = document.getElementById('category');
+const priorityInput = document.getElementById('priority');
+
 function renderTask(task) {
     const li = document.createElement('li');
     const checkbox = document.createElement('input');
     const span = document.createElement('span');
+    const info = document.createElement('small');
     const button = document.createElement('button');
 
     checkbox.type = 'checkbox';
@@ -14,6 +19,15 @@ function renderTask(task) {
 
     span.textContent = task.text;
     button.textContent = 'Hapus';
+
+    let deadlineText = '-';
+
+if (task.due_date) {
+    deadlineText = new Date(task.due_date).toLocaleString('id-ID');
+}
+
+info.textContent =
+    ` | Category: ${task.category || '-'} | Priority: ${task.priority || 1} | Deadline: ${deadlineText}`;
 
     button.addEventListener('click', function() {
         fetch(`/tasks/${task.id}`, {
@@ -51,6 +65,7 @@ function renderTask(task) {
 
     li.appendChild(checkbox);
     li.appendChild(span);
+    li.appendChild(info);
     li.appendChild(button);
 
     if (task.completed) {
@@ -67,6 +82,11 @@ fetch('/tasks')
         return response.json();
     })
     .then(function(tasks) {
+        if (!Array.isArray(tasks)) {
+            console.log(tasks);
+            return;
+        }
+
         tasks.forEach(function(task) {
             renderTask(task);
         });
@@ -87,7 +107,10 @@ form.addEventListener('submit', function(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            text: todoText
+            text: todoText,
+            due_date: dueDateInput.value || null,
+            category: categoryInput.value || null,
+            priority: Number(priorityInput.value) || 1
         })
     })
     .then(function(response) {
@@ -95,6 +118,10 @@ form.addEventListener('submit', function(event) {
     })
     .then(function(newTask) {
         renderTask(newTask);
+
         input.value = '';
+        dueDateInput.value = '';
+        categoryInput.value = '';
+        priorityInput.value = '1';
     });
 });

@@ -13,6 +13,23 @@
         <p>==================================</p>
         <form id="todo-form">
             <input type="text" id="todo-input" placeholder="Add a new task..." required>
+
+            <input type="datetime-local" id="due-date">
+
+            <select id="category">
+                <option value="">Category</option>
+                <option value="Coding">Coding</option>
+                <option value="Skripsi">Skripsi</option>
+                <option value="Pribadi">Pribadi</option>
+                <option value="Kuliah">Kuliah</option>
+            </select>
+
+            <select id="priority">
+                <option value="1">Low</option>
+                <option value="2">Medium</option>
+                <option value="3">High</option>
+            </select>
+
             <button type="submit">Add</button>
         </form>
         <ul id="todo-list">
