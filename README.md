@@ -21,12 +21,20 @@ https://todo-list-web-amber.vercel.app/
 - Penyimpanan data online menggunakan Supabase
 - Tampilan responsif untuk berbagai perangkat
 
-## Teknologi yang Digunakan
+## Tech Stack
 
-- HTML5
-- CSS3
-- JavaScript (Vanilla JS)
+### Frontend
+- HTML
+- CSS
+- Vanilla JavaScript
+
+### Backend
+- Node.js
+
+### Database
 - Supabase
+
+### Deployment
 - Vercel
 
 ## Struktur Proyek
