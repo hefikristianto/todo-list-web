@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalender Tugas - Hefi Kristianto</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <canvas id="lightning-bg"></canvas>
+    <div class="city-silhouette"></div>
+    <div class="background-glow"></div>
+
+    <div id="page-loader" class="page-loader">
+        <div class="loader-box">
+            <div class="loader-spinner"></div>
+            <p>Loading schedule...</p>
+        </div>
+    </div>
+
+    <main class="app calendar-app">
+
+        <a href="index.html" class="back-btn" id="back-home">← Kembali</a>
+
+        <header class="calendar-hero">
+            <div>
+                <p class="hero-badge">TASK SCHEDULE</p>
+                <h1>Weekly Planner</h1>
+                <p>
+                    Lihat tugas aktif berdasarkan deadline mingguan.
+                </p>
+            </div>
+
+            <div class="calendar-clock-card">
+                <p>LOCAL TIME</p>
+                <h2 id="local-time">--:--:--</h2>
+                <span id="local-date">Loading...</span>
+            </div>
+        </header>
+
+        <section class="calendar-panel">
+            <div class="calendar-header">
+                <div>
+                    <p class="calendar-label">CURRENT WEEK</p>
+                    <h2 id="week-range">Loading...</h2>
+                </div>
+
+                <button id="refresh-calendar" class="calendar-action-btn">
+                    Refresh
+                </button>
+            </div>
+
+            <div class="calendar-scroll">
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="components/lightning.js"></script>
+    <script src="components/calendar.js"></script>
+</body>
+</html>

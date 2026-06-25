@@ -1,49 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>To Do List - Hefi Kristianto</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <p>==================================</p>
-        <h1>To Do List</h1>
-        <p>==================================</p>
-        <form id="todo-form">
-            <input type="text" id="todo-input" placeholder="Add a new task..." required>
 
-            <input type="datetime-local" id="due-date">
-
-            <select id="category">
-                <option value="">Category</option>
-                <option value="Coding">Coding</option>
-                <option value="Skripsi">Skripsi</option>
-                <option value="Pribadi">Pribadi</option>
-                <option value="Kuliah">Kuliah</option>
-            </select>
-
-            <select id="priority">
-                <option value="1">Low</option>
-                <option value="2">Medium</option>
-                <option value="3">High</option>
-            </select>
-
-            <button type="submit">Add</button>
-        </form>
-        <ul id="todo-list">
-            <br>
-        </ul>
-        <br>
-        <p>==================================</p>
-        <h1>Clear To Do List</h1>
-        <p>==================================</p>    
-        <ul id="completed-list">
-            <li> Clear To Do List</li>
-        </ul>
+    <canvas id="lightning-bg"></canvas>
+    <div class="city-silhouette"></div>
+    <div class="background-glow"></div>
+    <div id="page-loader" class="page-loader hide">
+        <div class="loader-box">
+            <div class="loader-spinner"></div>
+            <p id="loader-text">Processing...</p>
+        </div>
     </div>
+    <main class="app">
 
-    <script src="script.js"></script>
+        <header class="hero">
+            <p class="hero-badge">HEFI TASK MANAGER</p>
+
+            <h1>
+                <span id="typing-text"></span>
+                <span class="text-type__cursor">|</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Catat deadline, kategori, prioritas, dan progres tugas dalam satu tempat.
+            </p>
+        </header>
+
+        <section class="stats-panel">
+            <div class="stat-card">
+                <span class="stat-icon">📋</span>
+                <div>
+                    <h3 id="total-count">0</h3>
+                    <p>Total Tugas</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-icon">🕒</span>
+                <div>
+                    <h3 id="active-count">0</h3>
+                    <p>Aktif</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-icon">✅</span>
+                <div>
+                    <h3 id="completed-count">0</h3>
+                    <p>Selesai</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="add-task" class="form-panel">
+            <div class="section-title">
+                <span></span>
+                <h2>Tambah Tugas Baru</h2>
+            </div>
+
+            <form id="todo-form" class="todo-form">
+                <input type="text" id="todo-input" placeholder="Apa yang ingin kamu kerjakan?" required>
+
+                <select id="category">
+                    <option value="">Kategori</option>
+                    <option value="Coding">Coding</option>
+                    <option value="Skripsi">Skripsi</option>
+                    <option value="Pribadi">Pribadi</option>
+                    <option value="Kuliah">Kuliah</option>
+                </select>
+
+                <input type="datetime-local" id="due-date">
+
+                <select id="priority">
+                    <option value="1">Low</option>
+                    <option value="2">Medium</option>
+                    <option value="3">High</option>
+                </select>
+
+                <button type="submit" class="add-btn">+ Tambah</button>
+            </form>
+        </section>
+
+        <section class="task-dashboard">
+            <section id="active-tasks" class="task-panel">
+                <div class="task-panel-header">
+                    <div class="section-title">
+                        <span></span>
+                        <h2>Daftar Tugas</h2>
+                    </div>
+
+                    <div class="task-tools">
+                        <a href="calendar.html" class="calendar-btn">Kalender</a>
+
+                        <select id="sort-active" class="filter-input">
+                            <option value="default">Default</option>
+                            <option value="priority-desc">Priority tinggi</option>
+                            <option value="priority-asc">Priority rendah</option>
+                            <option value="deadline-asc">Deadline terdekat</option>
+                            <option value="smart">Smart Sort</option>
+                        </select>
+                    </div>
+                </div>
+
+                <ul id="todo-list" class="task-list"></ul>
+            </section>
+
+            <section id="completed-tasks" class="task-panel completed-panel">
+                <div class="task-panel-header">
+                    <div class="section-title">
+                        <span></span>
+                        <h2>Tugas Selesai</h2>
+                    </div>
+                </div>
+
+                <input
+                    type="text"
+                    id="completed-search"
+                    class="filter-input completed-search"
+                    placeholder="Cari tugas selesai..."
+                >
+
+                <ul id="completed-list" class="task-list"></ul>
+            </section>
+
+        </section>
+
+    </main>
+
+    <script src="components/lightning.js"></script>
+    <script src="components/script.js"></script>
 </body>
 </html>
